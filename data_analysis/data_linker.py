@@ -27,15 +27,16 @@ def zipToCensusNum(censusDF, zipNum, rows):
 """
 Obtain gentrif percentage from a zipcode
 """
-def zipToGentrif(censusDF, gentrificationDF, census_rows, zipcodes):
+def zipToGentrif(censusDF, gentrificationDF, gentrificationCensus, census_rows, zipcodes):
 	averageGentrif = {}
 	for zipcode in zipcodes:
 		gentrifLevels = []
 		#print(gentrifLevels)
 		for censusNum in zipToCensusNum(censusDF, zipcode, census_rows):
-			gentrifLevels.append(gentrificationDF.loc[censusNum]['Prob16_00v'])
+			if censusNum in gentrificationCensus.tolist():
+				gentrifLevels.append(gentrificationDF.loc[censusNum]['Prob16_00v'])
 		if gentrifLevels:
-			averageGentrif[zipcode] = sum(gentrifLevels)/len(gentrifLevels)
+			averageGentrif[zipcode] = round(sum(gentrifLevels)/len(gentrifLevels), 2)
 	return averageGentrif
 
 # Store/Analyze census data
@@ -49,7 +50,7 @@ zipToCensus_rows = zipToCensus_shape[0]
 gentrificationCensusNum_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/gentrifData.xlsx'
 gentrification = pd.read_excel(gentrificationCensusNum_file)
 # Different census numbers
-#gentrificationCensusNum = gentrification['FIPS']
+gentrificationCensusNum = gentrification['FIPS']
 gentrification.set_index("FIPS", inplace=True)
 
 # Store/Analyze crime data
@@ -58,7 +59,10 @@ crime = pd.read_excel(crime_file)
 # Different zip codes from crime data
 crimeZips = crime['ZIP Code']
 
-print(zipToGentrif(zipToCensus, gentrification, zipToCensus_rows, crimeZips))
+new_crime_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/ZipcodeToCrimeCount.csv'
+new_crime = pd.read_csv(new_crime_file)
+
+print(zipToGentrif(zipToCensus, gentrification, gentrificationCensusNum, zipToCensus_rows, new_crime['ZIP']))
 
 
 """
