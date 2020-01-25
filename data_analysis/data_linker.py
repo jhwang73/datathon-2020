@@ -66,5 +66,5 @@ new_crime = pd.read_csv(new_crime_file)
 zipToGentrif_dict = zipToGentrif(zipToCensus, gentrification, gentrificationCensusNum, zipToCensus_rows, new_crime['ZIP'])
 
 with open('zipToGentrif.csv', 'w') as f:
-    for key in zipToGentrif_dict.keys():
-        f.write("%s,%s\n"%(key, zipToGentrif_dict[key]))
+	for key in zipToGentrif_dict.keys():
+		f.write("%s,%s\n"%(key, zipToGentrif_dict[key]))

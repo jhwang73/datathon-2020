@@ -21,26 +21,24 @@ for idx in range(zip_gentrif_rows):
 # 	for key in gentLevel_dict.keys():
 # 		f.write("%s,%s\n"%(key, gentLevel_dict[key]))
 
-zip_crime_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/ZipcodeToCrimeCount.csv'
-zip_crime = pd.read_csv(zip_crime_file)
-
-zip_pop_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/ZipcodeToCrimeCount.csv'
+zip_pop_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/ZipcodeToCrimeCountBy100.csv'
 zip_pop = pd.read_csv(zip_pop_file)
-
+zip_pop.set_index("zipcode", inplace=True)
+print(zip_pop)
 crime_dict = {0:0, 1:0, 2:0, 3:0}
 
 for key,val in gentLevel_dict.items():
 	crimeCount = 0
-	popCount = 0
+	validCount = 0
 	for zc in val:
-		crimeCount += zip_crime.loc[zc]['CrimeCount']
-	for zc in val:
-		popCount += zip_pop.loc[zc]['PopCount']
-	crime_dict[key] = round(crimeCount/(len(val) * popCount), 2)
+		if zc in zip_pop.index.values:
+			crimeCount += zip_pop.loc[zc].tolist()[1]
+			validCount += 1
+	crime_dict[key] = round(crimeCount/validCount, 2)
 
-# with open('gentLevelToPerCapitaDrime.csv', 'w') as f:
-# 	for key in crime_dict.keys():
-# 		f.write("%s,%s\n"%(key, crime_dict[key]))
+with open('gentLevelToPerCapitaDrime.csv', 'w') as f:
+	for key in crime_dict.keys():
+		f.write("%s,%s\n"%(key, crime_dict[key]))
 
 charges = ["Aggravated Assault", "All other larceny", "All other offenses", "Animal Cruelty", "Arson", "Assisting or promoting prostitution", 
 	"Bad checks", "Betting/wagering", "Bribery", "Burglary, Breaking and Entering", "Counterfeiting, forgery", "Credit Card, ATM fraud", "Curfew, loitering, vagrancy violations",
