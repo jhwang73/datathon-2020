@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 
 """
 Need to be able to take census number and determine what zipcodes lie in it.
@@ -62,9 +63,8 @@ crimeZips = crime['ZIP Code']
 new_crime_file = '/Users/alexanderxiong/Documents/GitHub/datathon-2020/data/ZipcodeToCrimeCount.csv'
 new_crime = pd.read_csv(new_crime_file)
 
-print(zipToGentrif(zipToCensus, gentrification, gentrificationCensusNum, zipToCensus_rows, new_crime['ZIP']))
+zipToGentrif_dict = zipToGentrif(zipToCensus, gentrification, gentrificationCensusNum, zipToCensus_rows, new_crime['ZIP'])
 
-
-"""
-Need to take the zipcodes and pull the proper metrics/distributions from crime data
-"""
+with open('zipToGentrif.csv', 'w') as f:
+    for key in zipToGentrif_dict.keys():
+        f.write("%s,%s\n"%(key, zipToGentrif_dict[key]))
