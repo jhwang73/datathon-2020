@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React from "react";
+
 import { VictoryBar } from "victory";
 
 const styles = {
   container: {
     backgroundColor: "#ccc",
     borderRadius: 3,
-    width: 100,
-    height: 100,
+    width: 500,
+    height: 500,
     padding: 4,
     margin: 8
   },
@@ -21,40 +21,37 @@ const sampleData = [
   { x: 5, y: 6, y0: 3 }
 ];
 
-class BarChart extends Component {
-  render() {
-    return (
-      <div styles={styles.container}>
-        <h3>Click Me</h3>
-        <VictoryBar
-          animate={{
-            duration: 2000,
-            onLoad: { duration: 1000 }
-          }}
-          style={{
-            data: { fill: "#c43a31" }
-          }}
-          events={[{
-            target: "data",
-            eventHandlers: {
-              onClick: () => {
-                return [
-                  {
-                    target: "data",
-                    mutation: (props) => {
-                      const fill = props.style && props.style.fill;
-                      return fill === "black" ? null : { style: { fill: "black" } };
-                    }
+const BarChart = () => {
+  return (
+    <div style={styles.container}>
+      <VictoryBar
+        animate={{
+          duration: 2000,
+          onLoad: { duration: 1000 }
+        }}
+        style={{
+          data: { fill: "#c43a31" }
+        }}
+        events={[{
+          target: "data",
+          eventHandlers: {
+            onClick: () => {
+              return [
+                {
+                  target: "data",
+                  mutation: (props) => {
+                    const fill = props.style && props.style.fill;
+                    return fill === "black" ? null : { style: { fill: "black" } };
                   }
-                ];
-              }
+                }
+              ];
             }
-          }]}
-          data={sampleData}
-        />
-      </div>
-    );
-  }
+          }
+        }]}
+        data={sampleData}
+      />
+    </div>
+  );
 }
-
+    
 export default BarChart;
